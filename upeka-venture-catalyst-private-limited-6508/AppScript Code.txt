@@ -1,0 +1,131 @@
+function doGet() {
+ 
+  //sheet configuration 
+
+  let sheetId = "1Fw66IFAc2JBMUh33ywcg5gOcJg958xexrH14CBssPf8";
+
+  let readedSheet = SpreadsheetApp.openById(sheetId);
+
+  let ans = readedSheet.getSheets()[0];
+
+  // new api configuration
+
+let url = "https://newsapi.org/v2/top-headlines?country=us&apiKey=24a9293f76134f1da7826149e181b9b1";
+let response = UrlFetchApp.fetch(url);
+
+  let json =response.getContentText(); 
+
+var data = JSON.parse(json);
+var arrayLength = data.articles.length;
+// Logger.log(arrayLength);
+
+
+
+  // new api manipulation and saving him to spreadsheet
+  
+  let point=2;
+
+      for(let i=0 ; i<arrayLength ; i++){
+
+        if(data.articles[i].urlToImage==null || data.articles[i].url == null || data.articles[i].title == null){
+          continue;
+        }else{
+           //  storing the url of image 
+              ans.getRange("A"+point).setValues([[data.articles[i].urlToImage]]);
+              // storing the title of image 
+              ans.getRange("b"+point).setValues([[data.articles[i].title]]);
+             
+              // storing the url of news
+              ans.getRange("c"+point).setValues([[data.articles[i].url]]);
+           
+            point++;
+            if(point==12){
+              break;
+            }
+          }
+
+      }
+
+
+        let newsData = readedSheet.getSheets()[0]
+        .getDataRange()
+        .getValues();
+
+
+
+        let result ={} ;
+        result.newsData=makeObject(newsData);
+
+
+
+ var telegramBotToken = "6151564665:AAECog8xToz_iVTnuWtvjFZCo3CRS_96SOM";
+  var telegramChatId = "-1001956641186";
+ 
+
+// Titlle
+// Url
+
+for(let i=0 ; i<result.newsData.Image.length ; i++){
+    let a = result.newsData.Image ;
+    let b = result.newsData.Titlle ;
+    let c = result.newsData.Url ;
+    var telegramUrl = "https://api.telegram.org/bot" + telegramBotToken + "/sendPhoto?chat_id=" + telegramChatId + "&photo=" +a[i]+"&caption="+b[i]+"    "+c[i] ;
+   
+    let response = UrlFetchApp.fetch(telegramUrl);
+    Utilities.sleep(10000);
+    if(i==7)
+    break;
+}
+
+
+
+return ContentService.createTextOutput(JSON.stringify("OK"))
+.setMimeType(ContentService.MimeType.JSON);
+
+
+
+
+
+
+
+}
+
+
+
+function makeObject(multiArr) {
+         let obj={} ;
+
+         let headers = multiArr.shift();
+
+         for(let i=0 ; i<headers.length ; i++){
+
+                obj[headers[i]]=multiArr.map(function(app){
+                    return app[i];
+                });
+         }
+
+      return obj ;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

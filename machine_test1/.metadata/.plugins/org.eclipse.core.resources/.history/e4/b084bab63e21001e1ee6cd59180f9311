@@ -1,0 +1,74 @@
+package com.test.controller;
+
+import java.util.List;
+
+import javax.security.auth.login.LoginException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.test.model.Student;
+import com.test.service.StudentService;
+
+@RestController
+@RequestMapping("/s")
+public class StudentController {
+
+	@Autowired
+	private StudentService cSer;
+
+	@PostMapping
+	public ResponseEntity<Student> addCustomerHandler(@RequestBody Student customer) {
+
+		Student savedcustomer = cSer.addStudent(customer);
+		return new ResponseEntity<>(savedcustomer, HttpStatus.OK);
+	}
+
+	@DeleteMapping
+	public ResponseEntity<Student> deleteCustomerHandler(@RequestBody Student customer) {
+
+		Student deletedCustomer = cSer.removeStudent(customer);
+
+		return new ResponseEntity<>(deletedCustomer, HttpStatus.ACCEPTED);
+	}
+
+	@PutMapping
+	public ResponseEntity<Student> updateCustomerHandler(@RequestBody Student customer) {
+
+		Student updatedCustomer;
+		if (cs.getUserId() == customer.getCustomerId())
+			updatedCustomer = cSer.updateCustomer(customer);
+		else
+			throw new CustomerException("You are not allowed to update the user Id...!");
+
+		return new ResponseEntity<>(updatedCustomer, HttpStatus.ACCEPTED);
+	}
+
+	@GetMapping("/loc")
+	public ResponseEntity<List<Student>> viewAllCustomerHandler() {
+
+		List<Student> customerlist = cSer.ViewAllStudent();
+
+		return new ResponseEntity<>(customerlist, HttpStatus.OK);
+
+	}
+
+	@GetMapping
+	public ResponseEntity<Student> viewCustomerHandler(@RequestParam String uuid) {
+
+		Student viewCustomer = cSer.viewCustomer(customerId);
+
+		return new ResponseEntity<>(viewCustomer, HttpStatus.OK);
+	}
+
+}

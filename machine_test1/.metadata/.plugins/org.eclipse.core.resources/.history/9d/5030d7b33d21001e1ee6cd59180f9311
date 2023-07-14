@@ -1,7 +1,0 @@
-package com.test.controller;
-
-@RestController
-@RequestMapping("/s")
-public class StudentController {
-
-}

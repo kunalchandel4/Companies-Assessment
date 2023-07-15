@@ -23,8 +23,8 @@ public class StockItem {
 	private Long salePrice;
 	@Column(nullable = false)
 	private Long marketPrice;
+
 	@ManyToOne
-	@JoinColumn(name = "category_id",nullable = false)
-	
+	@JoinColumn(name = "category_id", nullable = false)
 	private StockCategory category;
 }

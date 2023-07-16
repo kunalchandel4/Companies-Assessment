@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Dmartready.exception.StockCategoryException;
+import com.Dmartready.exception.StockMovementException;
 import com.Dmartready.exception.StoreItemException;
 import com.Dmartready.exception.StoreLocationException;
 import com.Dmartready.model.ItemCustom;
@@ -33,13 +35,13 @@ public class StockManagementSystemController {
 
 	@GetMapping("/view/{storeLocationId}/{year}/{month}")
 	public ResponseEntity<List<ItemCustom>> viewStockItemAtEachStoreHandler(@PathVariable Long storeLocationId ,@PathVariable Integer year ,@PathVariable Integer month)
-			throws StoreItemException, StoreLocationException {
+			throws StoreItemException, StoreLocationException, StockMovementException {
 
 		return new ResponseEntity<>(stockItemServiceImpl.viewStockItemAtEachStore(storeLocationId, year, month), HttpStatus.OK);
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<String> addStockItemHandler(@RequestBody StockItem stockItem) throws StoreItemException {
+	public ResponseEntity<String> addStockItemHandler(@RequestBody StockItem stockItem) throws StoreItemException, StockCategoryException {
 
 		return new ResponseEntity<>(stockItemServiceImpl.addStockItem(stockItem), HttpStatus.CREATED);
 	}

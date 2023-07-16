@@ -7,12 +7,16 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.Dmartready.exception.StockCategoryException;
+import com.Dmartready.exception.StockMovementException;
 import com.Dmartready.exception.StoreItemException;
 import com.Dmartready.exception.StoreLocationException;
 import com.Dmartready.model.ItemCustom;
+import com.Dmartready.model.StockCategory;
 import com.Dmartready.model.StockItem;
 import com.Dmartready.model.StockMovement;
 import com.Dmartready.model.StoreLocation;
+import com.Dmartready.repository.StockCategoryRepository;
 import com.Dmartready.repository.StockItemRepository;
 import com.Dmartready.repository.StockMovementRepository;
 import com.Dmartready.repository.StoreLocationRepository;
@@ -25,11 +29,16 @@ public class StockItemServiceImpl implements StockItemService {
 	private StoreLocationRepository storeLocationRepository;
 	@Autowired
 	private StockMovementRepository stockMovementRepository;
+	@Autowired
+	private StockCategoryRepository StockCategoryRepository;
 
 	@Override
-	public String addStockItem(StockItem stockItem) throws StoreItemException {
+	public String addStockItem(StockItem stockItem) throws StoreItemException, StockCategoryException {
 		// TODO Auto-generated method stub
 		String msg = "New Stock-Item Added Succesfully !";
+
+		StockCategoryRepository.findById(stockItem.getCategory().getId())
+				.orElseThrow(() -> new StockCategoryException("Category does-not found"));
 
 		stockItemRepository.save(stockItem);
 		return msg;
@@ -58,14 +67,19 @@ public class StockItemServiceImpl implements StockItemService {
 
 	@Override
 	public List<ItemCustom> viewStockItemAtEachStore(Long storeLocationId, Integer year, Integer month)
-			throws StoreItemException, StoreLocationException {
+			throws StoreItemException, StoreLocationException, StockMovementException {
 		// TODO Auto-generated method stub
 		StoreLocation storeLocation = storeLocationRepository.findById(storeLocationId)
 				.orElseThrow(() -> new StoreLocationException("Store location not found"));
 		List<StockMovement> modelObject = stockMovementRepository
 				.findByDestinationLocationIdAndTimestampYearAndTimestampMonth(storeLocationId, year, month);
 
+		if(modelObject.size()==0) {
+			throw new StockMovementException("No such movement track on that location");
+		}
+		
 		List<ItemCustom> customItem = new ArrayList<>();
+		
 
 		for (StockMovement item : modelObject) {
 			// Perform actions on each item in the list

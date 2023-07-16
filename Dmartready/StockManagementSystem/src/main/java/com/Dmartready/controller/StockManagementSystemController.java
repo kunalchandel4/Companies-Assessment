@@ -41,6 +41,11 @@ public class StockManagementSystemController {
 	@Autowired
 	private StockMovementServiceImpl stockMovementServiceImpl;
 
+	@Autowired
+	private CustomerService customerService;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	/**
 	 * View stock items at each store location for a given year and month.
 	 *
@@ -132,18 +137,28 @@ public class StockManagementSystemController {
 				destinationLocationId, quantity), HttpStatus.OK);
 	}
 
-	@Autowired
-	private CustomerService customerService;
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
+	/**
+     * Save a new customer.
+     *
+     * @param customer the customer object to be saved
+     * @return the saved customer object
+	 * @throws CustomerException if there is an error saving the customer
+     */
 	@PostMapping("/customers")
-	public ResponseEntity<Customer> saveCustomerHandler(@RequestBody Customer customer) {
+	public ResponseEntity<Customer> saveCustomerHandler(@RequestBody Customer customer) throws CustomerException {
 		customer.setPassword(passwordEncoder.encode(customer.getPassword()));
 		customer.setRole("ROLE_" + customer.getRole().toUpperCase());
 		Customer registeredCustomer = customerService.registerCustomer(customer);
 		return new ResponseEntity<>(registeredCustomer, HttpStatus.ACCEPTED);
 	}
+	
+	 /**
+     * Get a customer by email.
+     *
+     * @param email the email of the customer
+     * @return the customer object
+     * @throws CustomerException if the customer is not found
+     */
 
 	@GetMapping("/customers/{email}")
 	public ResponseEntity<Customer> getCustomerByEmailHandler(@PathVariable("email") String email)
@@ -151,16 +166,27 @@ public class StockManagementSystemController {
 		Customer customer = customerService.getCustomerDetailsByEmail(email);
 		return new ResponseEntity<>(customer, HttpStatus.ACCEPTED);
 	}
-
+	  /**
+     * Get all customers.
+     *
+     * @return a list of all customer objects
+     * @throws CustomerException if there is an error retrieving the customers
+     */
 	@GetMapping("/customers")
 	public ResponseEntity<List<Customer>> getAllCustomerHandler() throws CustomerException {
 		List<Customer> customers = customerService.getAllCustomerDetails();
 		return new ResponseEntity<>(customers, HttpStatus.ACCEPTED);
 	}
-
+	/**
+	 * Get the details of the currently logged-in customer.
+	 *
+	 * @param auth the Authentication object representing the current authenticated user
+	 * @return a ResponseEntity containing the name of the logged-in customer
+	 * @throws CustomerException if there is an error retrieving the customer details
+	 */
 	@GetMapping("/signIn")
 	public ResponseEntity<String> getLoggedInCustomerDetailsHandler(Authentication auth) throws CustomerException {
-		System.out.println(auth); // this Authentication object having Principle object details
+		//System.out.println(auth); // this Authentication object having Principle object details
 		Customer customer = customerService.getCustomerDetailsByEmail(auth.getName());
 		return new ResponseEntity<>(customer.getName() + " Logged In Successfully", HttpStatus.ACCEPTED);
 	}

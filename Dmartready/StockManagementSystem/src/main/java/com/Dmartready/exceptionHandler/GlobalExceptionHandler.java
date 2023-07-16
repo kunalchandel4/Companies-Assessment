@@ -16,9 +16,22 @@ import com.Dmartready.exception.StockMovementException;
 import com.Dmartready.exception.StoreItemException;
 import com.Dmartready.exception.StoreLocationException;
 
+/**
+ * Global exception handler for handling various exceptions in the application.
+ * Provides exception handling and returns appropriate error responses.
+ */
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+	/**
+	 * Exception handler for MethodArgumentNotValidException. Handles validation
+	 * errors and returns a custom error response.
+	 *
+	 * @param e   the MethodArgumentNotValidException
+	 * @param req the WebRequest
+	 * @return a ResponseEntity containing the error response
+	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<MyManagementError> MethodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e,
 			WebRequest req) {
@@ -33,6 +46,15 @@ public class GlobalExceptionHandler {
 
 	}
 
+	/**
+	 * Exception handler for CustomerException. Handles customer-related exceptions
+	 * and returns a custom error response.
+	 *
+	 * @param e   the CustomerException
+	 * @param req the WebRequest
+	 * @return a ResponseEntity containing the error response
+	 */
+
 	@ExceptionHandler(CustomerException.class)
 	public ResponseEntity<MyManagementError> CustomerExceptionHandler(CustomerException e, WebRequest req) {
 
@@ -46,6 +68,14 @@ public class GlobalExceptionHandler {
 
 	}
 
+	/**
+	 * Exception handler for generic Exception. Handles generic exceptions and
+	 * returns a custom error response.
+	 *
+	 * @param e   the Exception
+	 * @param req the WebRequest
+	 * @return a ResponseEntity containing the error response
+	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<MyManagementError> myExceptionHandler(Exception e, WebRequest req) {
 
@@ -56,6 +86,15 @@ public class GlobalExceptionHandler {
 
 		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 	}
+
+	/**
+	 * Exception handler for NoHandlerFoundException. Handles the case when no
+	 * handler is found for the request and returns a custom error response.
+	 *
+	 * @param e   the NoHandlerFoundException
+	 * @param req the WebRequest
+	 * @return a ResponseEntity containing the error response
+	 */
 
 	@ExceptionHandler(NoHandlerFoundException.class)
 	public ResponseEntity<MyManagementError> noHandlerFoundHandler(NoHandlerFoundException e, WebRequest req) {
@@ -69,6 +108,15 @@ public class GlobalExceptionHandler {
 
 	}
 
+	/**
+	 * Exception handler for StoreLocationException. Handles store location-related
+	 * exceptions and returns a custom error response.
+	 *
+	 * @param e   the StoreLocationException
+	 * @param req the WebRequest
+	 * @return a ResponseEntity containing the error response
+	 */
+
 	@ExceptionHandler(StoreLocationException.class)
 	public ResponseEntity<MyManagementError> storeLocationExceptionHandler(StoreLocationException e, WebRequest req) {
 
@@ -80,6 +128,14 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * Exception handler for StoreItemException. Handles store item-related
+	 * exceptions and returns a custom error response.
+	 *
+	 * @param e   the StoreItemException
+	 * @param req the WebRequest
+	 * @return a ResponseEntity containing the error response
+	 */
 	@ExceptionHandler(StoreItemException.class)
 	public ResponseEntity<MyManagementError> storeItemExceptionHandler(StoreItemException e, WebRequest req) {
 
@@ -91,6 +147,14 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * Exception handler for StockMovementException. Handles stock movement-related
+	 * exceptions and returns a custom error response.
+	 *
+	 * @param e   the StockMovementException
+	 * @param req the WebRequest
+	 * @return a ResponseEntity containing the error response
+	 */
 	@ExceptionHandler(StockMovementException.class)
 	public ResponseEntity<MyManagementError> stockMovementExceptionHandler(StockMovementException e, WebRequest req) {
 
@@ -102,6 +166,14 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * Exception handler for StockCategoryException. Handles stock category-related
+	 * exceptions and returns a custom error response.
+	 *
+	 * @param e   the StockCategoryException
+	 * @param req the WebRequest
+	 * @return a ResponseEntity containing the error response
+	 */
 	@ExceptionHandler(StockCategoryException.class)
 	public ResponseEntity<MyManagementError> stockCategoryExceptionHandler(StockCategoryException e, WebRequest req) {
 

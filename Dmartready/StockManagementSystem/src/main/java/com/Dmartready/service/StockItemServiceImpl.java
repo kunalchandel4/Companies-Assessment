@@ -90,6 +90,9 @@ public class StockItemServiceImpl implements StockItemService {
 	public String deleteStockItem(Long stockItemId) throws StoreItemException {
 		// TODO Auto-generated method stub
 		String msg = "Stock-Item Deleted Succesfully !";
+
+		stockItemRepository.findById(stockItemId).orElseThrow(() -> new StoreItemException("Stock item not found"));;
+
 		stockItemRepository.deleteById(stockItemId);
 		return msg;
 	}

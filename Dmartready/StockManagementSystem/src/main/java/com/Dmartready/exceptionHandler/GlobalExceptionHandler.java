@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import com.Dmartready.exception.CustomerException;
 import com.Dmartready.exception.StockCategoryException;
 import com.Dmartready.exception.StockMovementException;
 import com.Dmartready.exception.StoreItemException;
@@ -31,7 +32,19 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 
 	}
-	
+
+	@ExceptionHandler(CustomerException.class)
+	public ResponseEntity<MyManagementError> CustomerExceptionHandler(CustomerException e, WebRequest req) {
+
+		MyManagementError err = new MyManagementError();
+		err.setTimestamp(LocalDateTime.now());
+		err.setMessage(e.getMessage());
+
+		err.setPath(req.getDescription(false));
+
+		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+
+	}
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<MyManagementError> myExceptionHandler(Exception e, WebRequest req) {
@@ -43,6 +56,7 @@ public class GlobalExceptionHandler {
 
 		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 	}
+
 	@ExceptionHandler(NoHandlerFoundException.class)
 	public ResponseEntity<MyManagementError> noHandlerFoundHandler(NoHandlerFoundException e, WebRequest req) {
 
@@ -54,7 +68,7 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 
 	}
-	
+
 	@ExceptionHandler(StoreLocationException.class)
 	public ResponseEntity<MyManagementError> storeLocationExceptionHandler(StoreLocationException e, WebRequest req) {
 
@@ -65,6 +79,7 @@ public class GlobalExceptionHandler {
 
 		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 	}
+
 	@ExceptionHandler(StoreItemException.class)
 	public ResponseEntity<MyManagementError> storeItemExceptionHandler(StoreItemException e, WebRequest req) {
 
@@ -75,6 +90,7 @@ public class GlobalExceptionHandler {
 
 		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 	}
+
 	@ExceptionHandler(StockMovementException.class)
 	public ResponseEntity<MyManagementError> stockMovementExceptionHandler(StockMovementException e, WebRequest req) {
 
@@ -85,6 +101,7 @@ public class GlobalExceptionHandler {
 
 		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 	}
+
 	@ExceptionHandler(StockCategoryException.class)
 	public ResponseEntity<MyManagementError> stockCategoryExceptionHandler(StockCategoryException e, WebRequest req) {
 

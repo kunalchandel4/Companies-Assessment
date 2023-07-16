@@ -25,7 +25,10 @@ import com.Dmartready.service.StockMovementServiceImpl;
 
 @RestController
 @RequestMapping("/stock")
-
+/**
+ * Controller for managing stock items in the stock management system. Provides
+ * endpoints for adding, updating, deleting, and viewing stock items.
+ */
 public class StockManagementSystemController {
 
 	@Autowired
@@ -33,39 +36,95 @@ public class StockManagementSystemController {
 	@Autowired
 	private StockMovementServiceImpl stockMovementServiceImpl;
 
+	/**
+	 * View stock items at each store location for a given year and month.
+	 *
+	 * @param storeLocationId the ID of the store location
+	 * @param year            the year to filter the stock movements
+	 * @param month           the month to filter the stock movements
+	 * @return a list of custom item objects with relevant information
+	 * @throws StoreItemException     if the stock item is not found
+	 * @throws StoreLocationException if the store location is not found
+	 * @throws StockMovementException if no stock movements are found for the given
+	 *                                filters
+	 */
 	@GetMapping("/view/{storeLocationId}/{year}/{month}")
-	public ResponseEntity<List<ItemCustom>> viewStockItemAtEachStoreHandler(@PathVariable Long storeLocationId ,@PathVariable Integer year ,@PathVariable Integer month)
+	public ResponseEntity<List<ItemCustom>> viewStockItemAtEachStoreHandler(@PathVariable Long storeLocationId,
+			@PathVariable Integer year, @PathVariable Integer month)
 			throws StoreItemException, StoreLocationException, StockMovementException {
 
-		return new ResponseEntity<>(stockItemServiceImpl.viewStockItemAtEachStore(storeLocationId, year, month), HttpStatus.OK);
+		return new ResponseEntity<>(stockItemServiceImpl.viewStockItemAtEachStore(storeLocationId, year, month),
+				HttpStatus.OK);
 	}
 
+	/**
+	 * Add a new stock item to the inventory.
+	 *
+	 * @param stockItem contains the details of the stock item to be added
+	 * @return a message indicating the successful addition of the stock item
+	 * @throws StoreItemException     if the stock item is not found
+	 * @throws StockCategoryException if the stock category is not found
+	 */
+
 	@PostMapping("/add")
-	public ResponseEntity<String> addStockItemHandler(@RequestBody StockItem stockItem) throws StoreItemException, StockCategoryException {
+	public ResponseEntity<String> addStockItemHandler(@RequestBody StockItem stockItem)
+			throws StoreItemException, StockCategoryException {
 
 		return new ResponseEntity<>(stockItemServiceImpl.addStockItem(stockItem), HttpStatus.CREATED);
 	}
 
+	/**
+	 * Update the quantity of a stock item.
+	 *
+	 * @param stockItemId the ID of the stock item to be updated
+	 * @param newQuantity the new quantity value to be set
+	 * @return a message indicating the successful update of the stock item
+	 * @throws StoreItemException if the stock item is not found
+	 */
 	@PutMapping("/update/{stockItemId}/{newQuantity}")
-	public ResponseEntity<String> updateStockItemHandler(@PathVariable Long stockItemId,@PathVariable Integer newQuantity)
-			throws StoreItemException {
+	public ResponseEntity<String> updateStockItemHandler(@PathVariable Long stockItemId,
+			@PathVariable Integer newQuantity) throws StoreItemException {
 
 		return new ResponseEntity<>(stockItemServiceImpl.updateStockItemByQuantity(stockItemId, newQuantity),
 				HttpStatus.ACCEPTED);
 	}
 
+	/**
+	 * Delete a stock item from the inventory.
+	 *
+	 * @param stockItemId the ID of the stock item to be deleted
+	 * @return a message indicating the successful deletion of the stock item
+	 * @throws StoreItemException if the stock item is not found
+	 */
 	@DeleteMapping("/delete/{stockItemId}")
-	public ResponseEntity<String> deleteStockItemHandler( @PathVariable Long stockItemId) throws StoreItemException {
+	public ResponseEntity<String> deleteStockItemHandler(@PathVariable Long stockItemId) throws StoreItemException {
 
 		return new ResponseEntity<>(stockItemServiceImpl.deleteStockItem(stockItemId), HttpStatus.OK);
 	}
-               
+
+	/**
+	 * Track the movement of a stock item from a source location to a destination
+	 * location.
+	 *
+	 * @param stockItemId           the ID of the stock item being transferred
+	 * @param sourceLocationId      the ID of the source location from where the
+	 *                              stock item is moved
+	 * @param destinationLocationId the ID of the destination location where the
+	 *                              stock item is transferred
+	 * @param quantity              the quantity of stock item being transferred
+	 * @return a message indicating the successful stock transfer
+	 * @throws StoreLocationException if the source or destination location is not
+	 *                                found
+	 * @throws StoreItemException     if the stock item is not found
+	 */
+
 	@PostMapping("/move/{stockItemId}/{sourceLocationId}/{destinationLocationId}/{quantity}")
 	public ResponseEntity<String> trackStockMovementHandler(@PathVariable Long stockItemId,
-			@PathVariable Long sourceLocationId, @PathVariable Long destinationLocationId,
-			@PathVariable int quantity) throws StoreLocationException, StoreItemException {
+			@PathVariable Long sourceLocationId, @PathVariable Long destinationLocationId, @PathVariable int quantity)
+			throws StoreLocationException, StoreItemException {
 
-		return new ResponseEntity<>(stockMovementServiceImpl.trackStockMovement(stockItemId, sourceLocationId, destinationLocationId, quantity), HttpStatus.OK);
+		return new ResponseEntity<>(stockMovementServiceImpl.trackStockMovement(stockItemId, sourceLocationId,
+				destinationLocationId, quantity), HttpStatus.OK);
 	}
 
 }

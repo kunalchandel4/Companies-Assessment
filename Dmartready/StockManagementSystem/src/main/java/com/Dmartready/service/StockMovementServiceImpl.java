@@ -1,8 +1,6 @@
 package com.Dmartready.service;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +14,11 @@ import com.Dmartready.repository.StockItemRepository;
 import com.Dmartready.repository.StockMovementRepository;
 import com.Dmartready.repository.StoreLocationRepository;
 
+/**
+ * Service implementation for tracking stock movements. Handles operations such
+ * as tracking the movement of stock items from one location to another.
+ */
+
 @Service
 public class StockMovementServiceImpl implements StockMovementService {
 	@Autowired
@@ -26,9 +29,25 @@ public class StockMovementServiceImpl implements StockMovementService {
 	@Autowired
 	private StockMovementRepository stockMovementRepository;
 
+	/**
+	 * Track the movement of a stock item from a source location to a destination
+	 * location. Creates a new stock movement record with the provided details.
+	 *
+	 * @param stockItemId           the ID of the stock item being transferred
+	 * @param sourceLocationId      the ID of the source location from where the
+	 *                              stock item is moved
+	 * @param destinationLocationId the ID of the destination location where the
+	 *                              stock item is transferred
+	 * @param quantity              the quantity of stock item being transferred
+	 * @return a message indicating the successful stock transfer
+	 * @throws StoreLocationException if the source or destination location is not
+	 *                                found
+	 * @throws StoreItemException     if the stock item is not found
+	 */
+
 	@Override
-	public String trackStockMovement(Long stockItemId, Long sourceLocationId, Long destinationLocationId, int quantity)
-			throws StoreLocationException, StoreItemException {
+	public String trackStockMovement(Long stockItemId, Long sourceLocationId, Long destinationLocationId,
+			Integer quantity) throws StoreLocationException, StoreItemException {
 		// TODO Auto-generated method stub
 
 		StockItem stockItem = stockItemRepository.findById(stockItemId)
@@ -38,15 +57,15 @@ public class StockMovementServiceImpl implements StockMovementService {
 		StoreLocation destinationLocation = storeLocationRepository.findById(destinationLocationId)
 				.orElseThrow(() -> new StoreLocationException("Destination location not found"));
 
+		if (stockItem.getQuantity() > quantity) {
+			throw new StoreItemException("provide a right detail of Quantity ");
+		}
 		StockMovement stockMovement = new StockMovement();
 		stockMovement.setStockItem(stockItem);
 		stockMovement.setSourceLocation(sourceLocation);
 		stockMovement.setDestinationLocation(destinationLocation);
 		stockMovement.setQuantity(quantity);
-//		LocalDateTime localDateTime =
-//		Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-//		
-//		stockMovement.setTimestamp( new java.sql.Timestamp(System.currentTimeMillis()));
+
 		stockMovement.setTimestamp(LocalDateTime.now());
 		stockMovementRepository.save(stockMovement);
 

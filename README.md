@@ -43,4 +43,7 @@ To get started with the DMart Stock Management System, follow these steps:
   |GET /stock/customers/**|ADMIN, USER|
   |GET /stock/view/**|ADMIN, USER|
 
-* API Endpoint(port) :- http://localhost:9000      
+* API Endpoint(port) :- http://localhost:9000
+  
+# To test the API, you can use the following dummy data:
+ [Dummy Data](https://github.com/kunalchandel4/DummyData)

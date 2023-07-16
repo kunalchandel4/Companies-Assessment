@@ -57,7 +57,7 @@ public class StockMovementServiceImpl implements StockMovementService {
 		StoreLocation destinationLocation = storeLocationRepository.findById(destinationLocationId)
 				.orElseThrow(() -> new StoreLocationException("Destination location not found"));
 
-		if (stockItem.getQuantity() > quantity) {
+		if (stockItem.getQuantity() < quantity) {
 			throw new StoreItemException("provide a right detail of Quantity ");
 		}
 		StockMovement stockMovement = new StockMovement();

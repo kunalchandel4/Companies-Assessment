@@ -1,6 +1,8 @@
 package com.Dmartready.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,10 @@ public class StockMovementServiceImpl implements StockMovementService {
 		stockMovement.setSourceLocation(sourceLocation);
 		stockMovement.setDestinationLocation(destinationLocation);
 		stockMovement.setQuantity(quantity);
+//		LocalDateTime localDateTime =
+//		Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+//		
+//		stockMovement.setTimestamp( new java.sql.Timestamp(System.currentTimeMillis()));
 		stockMovement.setTimestamp(LocalDateTime.now());
 		stockMovementRepository.save(stockMovement);
 

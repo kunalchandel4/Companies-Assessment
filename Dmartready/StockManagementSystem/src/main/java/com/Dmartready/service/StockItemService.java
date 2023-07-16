@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.Dmartready.exception.StoreItemException;
 import com.Dmartready.exception.StoreLocationException;
+import com.Dmartready.model.ItemCustom;
 import com.Dmartready.model.StockItem;
 
 public interface StockItemService {
@@ -13,6 +14,7 @@ public interface StockItemService {
 
 	public String deleteStockItem(Long stockItemId) throws StoreItemException;
 
-	public List<StockItem> viewStockItemAtEachStore(Long storeLocationId) throws StoreItemException, StoreLocationException;
+	public List<ItemCustom> viewStockItemAtEachStore(Long storeLocationId, Integer year, Integer month)
+			throws StoreItemException, StoreLocationException;
 
 }
